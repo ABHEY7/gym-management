@@ -1,0 +1,96 @@
+from tkinter import*
+from PIL import ImageTk, Image
+import mysql.connector
+import PIL
+import tkinter as tk
+from tkinter import ttk
+from tkinter import messagebox
+class getdetail:
+    def __init__(self):
+        self.root = Tk()
+        self.root.title('Weather Application')
+        self.root.state('zoomed')
+
+    def loginFrame(self):
+ 
+        self.login = Frame(self.root)
+        self.login.place(x = 0, y = 0, width="2000", height="1333")
+
+        self.image = Image.open("images/bvvv.jpg")
+        self.bgImage = ImageTk.PhotoImage(self.image)
+        self.bgLabel = Label(self.login, image=self.bgImage)
+        self.bgLabel.place(x = 0, y = 0, width = "2000", height = "1333")
+
+       
+      #whiteframe
+        Frame_login=Frame( self.root,bg="white")
+        Frame_login.place(x=200,y=70,height=560,width=1060)
+    
+      #icon
+        self.logo = Image.open("images/lll.png")
+        self.bglogo = ImageTk.PhotoImage(self.logo)
+        self.bgLabel1 = Label(Frame_login, image=self.bglogo,bg='white')
+        self.bgLabel1.place(x = 60, y = 20, width = "130", height = "130")
+     
+     #labels
+        self.label1=Label(Frame_login,text='Customer Details',bg='white',font=("century",25,"bold"))
+        self.label1.place(x=250,y=15,height=100,width=500)
+
+        connect=mysql.connector.connect(
+        host="localhost",
+        user="root",
+        passwd="",
+        database="gym"
+        )
+        conn=connect.cursor()
+        conn.execute('SELECT * FROM `entrybox` ')
+        tree=ttk.Treeview(Frame_login)
+
+        tree['columns']=('id','name','start','cont','adress')
+        tree.column('id',width=50,minwidth=50)
+        tree.column('name',width=50,minwidth=50)
+        tree.column('start',width=100,minwidth=100)
+        tree.column('cont',width=150,minwidth=150)
+        tree.column('adress',width=150,minwidth=150)
+
+        tree.heading('id',text='id')
+        tree.heading('name',text='name')
+        tree.heading('start',text='startimgdate')
+        tree.heading('cont',text='phonenumber')
+        tree.heading('adress',text='address')
+        i=0
+        for ro in conn:
+            tree.insert('',i,text='',values=(ro[0],ro[1],ro[2],ro[3],ro[4]))
+            i=i+1
+        tree.place(x=100,y=200)
+
+
+
+
+
+
+
+        self.root.mainloop()
+
+
+     #scroller
+        
+        #scro_x=ttk.Scrollbar(Frame_login,orient='horizontal')
+        #scro_y=ttk.Scrollbar(Frame_login,orient='vertical')
+        #self.detail=ttk.Treeview(Frame_login,columns=('NAME','STRAING DATE','PHONE NUMBER','ADDRESS'),#xscrollcommand=scro_x.set,yscrollcommand=scro_y.set)
+        #scro_x.pack(side=BOTTOM,fill=X)
+        #scro_x.pack(side=BOTTOM,fill=Y)
+        #scro_x=ttk.Scrollbar(command=self.detail.xview)
+        #scro_y=ttk.Scrollbar(command=self.detail.yview)
+        #self.detail.heading('NAME',text='NAME')
+        #self.detail.heading('STRAING DATE',text='STRAING DATE')
+        #self.detail.heading('PHONE NUMBER',text='PHONE NUMBER')
+        #self.detail.heading('ADDRESS',text='ADDRESS')
+        #self.detail['show']='heading'
+        #self.detail.pack(fill=BOTH,expand=1)
+        
+                
+if __name__ == "__main__":
+    #loginObj = Login()
+    loginObj = getdetail()
+    loginObj.loginFrame()          
